@@ -16,7 +16,7 @@ sudo install -m  0755 5xx.py /usr/local/bin/5xx.py
 #### Usage:
 
 ```sh
-# 5xx.py --help
+a@futronic:~$ 5xx.py --help
 usage: 5xx.py [-h] [-s START] [-e END] logs [logs ...]
 
 Parse log files for 5xx http return codes.
