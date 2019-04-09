@@ -28,10 +28,7 @@ func report(m map[string]*Site) {
 		t := float64(m[k].total)
 		p := (e / t) * 100.0
 		fmt.Println(" ", p)
-
 	}
-
-	fmt.Println(lc)
 }
 
 func do(line string) {
@@ -70,15 +67,11 @@ func main() {
 			return
 		}
 		defer file.Close()
-
 		scanner := bufio.NewScanner(file)
 		scanner.Split(bufio.ScanLines)
-
 		for scanner.Scan() {
 			do(scanner.Text())
-
 		}
-		report(m)
 	}
-
+	report(m)
 }
