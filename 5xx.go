@@ -21,17 +21,17 @@ type Site struct {
 
 var m map[string]*Site
 
-func report (m map[string]*Site){
+func report(m map[string]*Site) {
 	for k, _ := range m {
-			fmt.Printf(k)
-			e := float64(m[k].errors)
-			t := float64(m[k].total)
-			p := (e / t) * 100.0
-			fmt.Println(" ", p)
+		fmt.Printf(k)
+		e := float64(m[k].errors)
+		t := float64(m[k].total)
+		p := (e / t) * 100.0
+		fmt.Println(" ", p)
 
-		}
+	}
 
-		fmt.Println(lc)
+	fmt.Println(lc)
 }
 
 func do(line string) {
@@ -60,7 +60,7 @@ func do(line string) {
 func main() {
 	m = make(map[string]*Site)
 	lc = 0
-	files :=[]string{"20.data","20a.data"}
+	files := []string{"20.data", "20a.data"}
 	//files := []string{"10m.data", "10ma.data", "fat.data", "out.data", "out1.data", "out2.data", "out3.data"}
 	for _, f := range files {
 		fmt.Println(f)
@@ -78,7 +78,7 @@ func main() {
 			do(scanner.Text())
 
 		}
-	report(m)
+		report(m)
 	}
 
 }
