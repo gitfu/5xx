@@ -21,22 +21,31 @@ type Site struct {
 
 var m map[string]*Site
 
+func report (m map[string]*Site){
+	for k, _ := range m {
+			fmt.Printf(k)
+			e := float64(m[k].errors)
+			t := float64(m[k].total)
+			p := (e / t) * 100.0
+			fmt.Println(" ", p)
+
+		}
+
+		fmt.Println(lc)
+}
+
 func do(line string) {
-	stime := 1493969101.0
+	stime := 1493969100.0
 	etime := 1493969102.0
-	floated := 0.0
 	lc += 1
 	fu := strings.Split(line, "|")
 	hostname := strings.TrimSpace(fu[2])
-	if _, ok := m[hostname]; ok {
-
-	} else {
+	if _, ok := m[hostname]; !ok {
 		m[hostname] = &Site{
 			0, 0,
 		}
 	}
-	//t := m[hostname]
-	floated, _ = strconv.ParseFloat((strings.TrimSpace(fu[0])), 64)
+	floated, _ := strconv.ParseFloat((strings.TrimSpace(fu[0])), 64)
 	if etime > floated {
 		if floated >= stime {
 			m[hostname].total += 1
@@ -51,9 +60,8 @@ func do(line string) {
 func main() {
 	m = make(map[string]*Site)
 	lc = 0
-
-	//files :=[]string{"20.data","20a.data"}
-	files := []string{"10m.data", "10ma.data", "fat.data", "out.data", "out1.data", "out2.data", "out3.data"}
+	files :=[]string{"20.data","20a.data"}
+	//files := []string{"10m.data", "10ma.data", "fat.data", "out.data", "out1.data", "out2.data", "out3.data"}
 	for _, f := range files {
 		fmt.Println(f)
 		file, err := os.Open(f)
@@ -70,16 +78,7 @@ func main() {
 			do(scanner.Text())
 
 		}
-		for k, _ := range m {
-			fmt.Printf(k)
-			e := float64(m[k].errors)
-			t := float64(m[k].total)
-			p := (e / t) * 100.0
-			fmt.Println(" ", p)
-
-		}
-
-		fmt.Println(lc)
+	report(m)
 	}
 
 }
