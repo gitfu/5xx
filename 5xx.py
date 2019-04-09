@@ -85,7 +85,7 @@ def chk_timestamp(timestamp):
     check if timestamp is between start_time and end_time.
     '''
     log_time=float(timestamp)
-    if end_time >= log_time:
+    if end_time > log_time:
         if log_time >= start_time:
             return True
     return False
