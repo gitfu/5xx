@@ -9,29 +9,29 @@ import (
 	"strings"
 )
 
-var lc int
 var stime float64
 var etime float64
+var m map[string]*Site
 
 type Site struct {
 	total, errors int
 }
 
-var m map[string]*Site
+func (site *Site) percent() float64 {
+	e := float64(site.errors)
+	t := float64(site.total)
+	p := (e / t) * 100.0
+	return p
+}
 
 func report(m map[string]*Site) {
-	for k, _ := range m {
+	for k, v := range m {
 		fmt.Printf(k)
-		e := float64(m[k].errors)
-		t := float64(m[k].total)
-		p := (e / t) * 100.0
-		fmt.Println(" ", p)
+		fmt.Println(" ", v.percent())
 	}
 }
 
 func do(line string) {
-
-	lc += 1
 	fu := strings.Split(line, "|")
 	hostname := strings.TrimSpace(fu[2])
 	if _, ok := m[hostname]; !ok {
@@ -59,7 +59,6 @@ func main() {
 	stime = *sptr
 	etime = *eptr
 	m = make(map[string]*Site)
-	lc = 0
 	for _, f := range files {
 		fmt.Println(f)
 		file, err := os.Open(f)
