@@ -31,14 +31,33 @@ func report(m map[string]*Site) {
 	}
 }
 
-func do(line string) {
-	fu := strings.Split(line, "|")
-	hostname := strings.TrimSpace(fu[2])
+func parseLog(f string) {
+	fmt.Println(f)
+	file, err := os.Open(f)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		do(scanner.Text())
+	}
+}
+
+func checkHost(hostname string) {
 	if _, ok := m[hostname]; !ok {
 		m[hostname] = &Site{
 			0, 0,
 		}
 	}
+}
+
+func do(line string) {
+	fu := strings.Split(line, "|")
+	hostname := strings.TrimSpace(fu[2])
+	checkHost(hostname)
 	floated, _ := strconv.ParseFloat((strings.TrimSpace(fu[0])), 64)
 	if etime > floated {
 		if floated >= stime {
@@ -60,18 +79,7 @@ func main() {
 	etime = *eptr
 	m = make(map[string]*Site)
 	for _, f := range files {
-		fmt.Println(f)
-		file, err := os.Open(f)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer file.Close()
-		scanner := bufio.NewScanner(file)
-		scanner.Split(bufio.ScanLines)
-		for scanner.Scan() {
-			do(scanner.Text())
-		}
+		parseLog(f)
 	}
 	report(m)
 }
