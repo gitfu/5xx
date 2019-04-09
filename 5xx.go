@@ -12,11 +12,6 @@ import (
 var lc int
 var stime float64
 var etime float64
-var hosts []string
-var errors []int
-var totals []int
-
-//var logfiles []string
 
 type Site struct {
 	total, errors int
@@ -57,22 +52,14 @@ func do(line string) {
 }
 
 func main() {
-
 	sptr := flag.Float64("s", 0.0, "start time")
 	eptr := flag.Float64("e", 9999999999.0, "end time")
-	//files:=flag.Args()
 	flag.Parse()
 	files := flag.Args()
-	fmt.Println(files)
-	fmt.Println(*sptr)
-	fmt.Println(*eptr)
 	stime = *sptr
 	etime = *eptr
-
 	m = make(map[string]*Site)
 	lc = 0
-	//files := []string{"20.data", "20a.data"}
-	//files := []string{"10m.data", "10ma.data", "fat.data", "out.data", "out1.data", "out2.data", "out3.data"}
 	for _, f := range files {
 		fmt.Println(f)
 		file, err := os.Open(f)
