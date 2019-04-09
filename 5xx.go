@@ -2,11 +2,11 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
-	"flag"
 )
 
 var lc int
@@ -15,6 +15,7 @@ var etime float64
 var hosts []string
 var errors []int
 var totals []int
+
 //var logfiles []string
 
 type Site struct {
@@ -57,16 +58,16 @@ func do(line string) {
 
 func main() {
 
-	sptr:=flag.Float64("s",0.0,"start time")
-	eptr:=flag.Float64("e",9999999999.0,"end time")
+	sptr := flag.Float64("s", 0.0, "start time")
+	eptr := flag.Float64("e", 9999999999.0, "end time")
 	//files:=flag.Args()
 	flag.Parse()
-	files:=flag.Args()
+	files := flag.Args()
 	fmt.Println(files)
 	fmt.Println(*sptr)
 	fmt.Println(*eptr)
-	stime=*sptr
-	etime=*eptr
+	stime = *sptr
+	etime = *eptr
 
 	m = make(map[string]*Site)
 	lc = 0
