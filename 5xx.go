@@ -25,9 +25,9 @@ func (site *Site) percent() float64 {
 }
 
 func report(m map[string]*Site) {
+	fmt.Printf("Between time %.2f and time  %.2f \n", stime, etime)
 	for k, v := range m {
-		fmt.Printf(k)
-		fmt.Println(" ", v.percent())
+		fmt.Printf("%s returned %.2f%% 500 errors\n", k, v.percent())
 	}
 }
 
@@ -65,7 +65,6 @@ func do(line string) {
 			if strings.HasPrefix(fu[4], " 5") {
 				m[hostname].errors += 1
 			}
-
 		}
 	}
 }
