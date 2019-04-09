@@ -132,7 +132,7 @@ def shw_report(data_list):
     print('\n  Between time %10.3f and time %10.3f:'%(start_time,end_time))
     for k,v in report_data.items():
         p= (v['errors']/v['total'])*100
-        print('\t%s returned %2.2f%%  5xx errors '%(k,p))
+        print('\t%s returned %2.2f%% 5xx errors '%(k,p))
 
 
 
