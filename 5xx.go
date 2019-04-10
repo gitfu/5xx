@@ -9,44 +9,44 @@ import (
 	"strings"
 )
 
-var stime float64
-var etime float64
+var lc int
+var startTime float64
+var endTime float64
 var m map[string]*Stats
 
 type Stats struct {
 	total, errors int
 }
 
-func (stats *Stats) percent() float64 {
+func (stats *Stats) Percentage() float64 {
 	e := float64(stats.errors)
 	t := float64(stats.total)
 	p := (e / t) * 100.0
 	return p
 }
 
-func report(m map[string]*Stats) {
-	fmt.Printf("Between time %.2f and time  %.2f \n", stime, etime)
+func Reporter(m map[string]*Stats) {
+	fmt.Printf("Between time %.2f and time  %.2f \n", startTime, endTime)
 	for k, v := range m {
-		fmt.Printf("%s returned %.2f%% 500 errors\n", k, v.percent())
+		fmt.Printf("%s returned %.2f%% 500 errors\n", k, v.Percentage())
 	}
 }
 
-func parseLog(f string) {
-	fmt.Println(f)
-	file, err := os.Open(f)
+func LogParser(log string) {
+	fmt.Println(log)
+	file, err := os.Open(log)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		parseLine(scanner.Text())
+		LineParser(scanner.Text())
 	}
-}
 
-func checkHost(hostname string) {
+}
+func HostChecker(hostname string) {
 	if _, ok := m[hostname]; !ok {
 		m[hostname] = &Stats{
 			0, 0,
@@ -54,47 +54,51 @@ func checkHost(hostname string) {
 	}
 }
 
-func checkTime(timestamp float64) int {
-	if etime > timestamp {
-		if timestamp >= stime {
+func TimeChecker(timestamp float64) int {
+	if endTime > timestamp {
+		if timestamp >= startTime {
 			return 1
 		}
 	}
 	return 0
 }
 
-func checkHttpCode(httpcode string) int {
-	if strings.HasPrefix(httpcode, " 5") {
+func HttpCodeChecker(httpcode string) int {
+	if strings.HasPrefix(httpcode, "5") {
 		return 1
 	}
 	return 0
 }
 
-func parseLine(line string) {
+func LineParser(line string) {
+	lc += 1
 	values := strings.Split(line, "|")
 	hostname := strings.TrimSpace(values[2])
-	checkHost(hostname)
+	HostChecker(hostname)
 	timestamp, _ := strconv.ParseFloat((strings.TrimSpace(values[0])), 64)
-	m[hostname].total += checkTime(timestamp)
-	httpcode := values[4]
-	m[hostname].errors += checkHttpCode(httpcode)
+	m[hostname].total += TimeChecker(timestamp)
+	httpcode := strings.TrimSpace(values[4])
+	m[hostname].errors += HttpCodeChecker(httpcode)
 }
 
-func parseArgs() []string {
-	sptr := flag.Float64("s", 0.0, "start time")
-	eptr := flag.Float64("e", 9999999999.0, "end time")
+func ArgParser() []string {
+	startPtr := flag.Float64("s", 0.0, "start time")
+	endPtr := flag.Float64("e", 9999999999.0, "end time")
 	flag.Parse()
 	files := flag.Args()
-	stime = *sptr
-	etime = *eptr
+	startTime = *startPtr
+	endTime = *endPtr
 	return files
 }
 
 func main() {
-	files := parseArgs()
+	lc = 0
+	logFiles := ArgParser()
 	m = make(map[string]*Stats)
-	for _, f := range files {
-		parseLog(f)
+
+	for _, log := range logFiles {
+		LogParser(log)
+		fmt.Println(lc)
 	}
-	report(m)
+	Reporter(m)
 }
